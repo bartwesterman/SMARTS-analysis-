@@ -1,0 +1,30 @@
+from rdkit import Chem
+from rdkit.Chem import rdFMCS
+
+# SMILES of small molecules
+smiles_list = [
+    'C=CCn1c(=O)c2cnc(Nc3ccc(N4CCN(C)CC4)cc3)nc2n1-c1cccc(C(C)(C)O)n1',                #ADAVOSERTIB
+    'Cc1ncc(-c2ccnc(Nc3ccc(S(C)(=O)=O)cc3)n2)n1C(C)C',                                 #AZD-5438
+    'CC[C@@H]1C(=O)N(C)c2cnc(Nc3ccc(C(=O)NC4CCN(C)CC4)cc3OC)nc2N1C1CCCC1',             #BI-2536
+    'Cc1cc(Nc2cc(N3CCN(C)CC3)nc(/C=C/c3ccccc3)n2)n[nH]1',                              #ENMD-2076
+    'C[C@@H](Oc1cc(-n2cnc3ccc(CN4CCN(C)CC4)cc32)sc1C(N)=O)c1ccccc1C(F)(F)F',           #GSK-461364
+    'Nc1nc(Nc2ccc(S(N)(=O)=O)cc2)nn1C(=O)c1c(F)cccc1F',                                #JNJ-7706621
+    'CN(C)C/C=C/C(=O)Nc1ccc(C(=O)Nc2cccc(Nc3ncc(Cl)c(-c4c[nH]c5ccccc45)n3)c2)cc1',     #THZ1
+]
+
+# Convert SMILES to RDKit molecules
+molecules = [Chem.MolFromSmiles(smiles) for smiles in smiles_list]
+
+# Find the Maximum Common Substructure (MCS)
+mcs_result = rdFMCS.FindMCS(molecules)
+
+# Extract the MCS as a molecule
+mcs_smarts = mcs_result.smartsString
+mcs_molecule = Chem.MolFromSmarts(mcs_smarts)
+
+# Print the MCS SMILES
+print("MCS SMARTS:", mcs_smarts)
+
+# Visualize the MCS
+from rdkit.Chem import Draw
+Draw.MolToImage(mcs_molecule).show()
